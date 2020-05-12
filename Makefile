@@ -1,9 +1,9 @@
-ARCHS ?= armv6 arm64
-target ?= iphone:clang:9.3:2.0
-include $(THEOS)/makefiles/common.mk
+CC     ?= xcrun -sdk iphoneos clang
+CFLAGS ?= -arch arm64 -arch armv6 -miphoneos-version-min=6.0
+LDID   ?= ldid
 
-TOOL_NAME = plutil
-plutil_FILES = $(wildcard json-framework/Classes/*.m) plutil.m iphone-3.0-cookbook-/C16-Push/02-PushUtil/JSONHelper.m
-plutil_CODESIGN_FLAGS = -Sent.xml
+plutil:
+	$(CC) $(CFLAGS) -o plutil json-framework/Classes/*.m plutil.m iphone-3.0-cookbook-/C16-Push/02-PushUtil/JSONHelper.m -framework Foundation
 
-include $(THEOS_MAKE_PATH)/tool.mk
+clean:
+	rm -f plutil
