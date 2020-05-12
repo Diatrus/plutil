@@ -2,8 +2,8 @@
 
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
-#import "json-framework/Classes/NSObject+SBJson.h"
-#import "iphone-3.0-cookbook-/C16-Push/02-PushUtil/JSONHelper.h"
+#import <NSObject+SBJson.h>
+#import <JSONHelper.h>
 
 @interface NSDate (NSDate_dateWithNaturalLanguageString)
 +(id)dateWithNaturalLanguageString:(NSString *)string;
@@ -17,7 +17,7 @@ void WriteMyPropertyListToFile(NSDictionary* plist, NSURL* url)
 {
 	SInt32 error;
 
-	CFDataRef data = CFPropertyListCreateXMLData(kCFAllocatorDefault, plist);
+	CFDataRef data = CFPropertyListCreateData(kCFAllocatorDefault, plist, kCFPropertyListXMLFormat_v1_0, 0, NULL);
 	CFURLWriteDataAndPropertiesToResource((CFURLRef)url, data, NULL, &error);
 	CFRelease(data);
 }
@@ -26,7 +26,7 @@ void WriteMyPropertyListToStdOut(CFPropertyListRef plist)
 {
 	CFWriteStreamRef writeStream = CFWriteStreamCreateWithFile(kCFAllocatorDefault, (CFURLRef)[NSURL fileURLWithPath:@"/dev/stdout"]);
 	CFWriteStreamOpen(writeStream);
-	CFPropertyListWriteToStream(plist, writeStream, kCFPropertyListXMLFormat_v1_0, NULL);
+	CFPropertyListWrite(plist, writeStream, kCFPropertyListXMLFormat_v1_0, 0, NULL);
 	CFWriteStreamClose(writeStream);
 	CFRelease(writeStream);
 }
@@ -44,7 +44,7 @@ void WriteMyPropertyListToBinaryFile(CFPropertyListRef plist, NSURL *url)
 
 	stream = CFWriteStreamCreateWithFile(kCFAllocatorDefault, (CFURLRef)url);
 	CFWriteStreamOpen(stream);
-	CFPropertyListWriteToStream(plist, stream, kCFPropertyListBinaryFormat_v1_0, NULL);
+	CFPropertyListWrite(plist, stream, kCFPropertyListBinaryFormat_v1_0, 0, NULL);
 	CFWriteStreamClose(stream);
 	CFRelease(stream);
 }
